@@ -91,12 +91,41 @@
       margin-bottom: 1.25rem;
     }
     .hero-name em { display: block; font-weight: 400; font-size: 0.65em; color: rgba(250,246,238,0.7); }
-    #greeting {
-      display: inline-block; overflow: hidden; vertical-align: bottom; white-space: nowrap;
-      transition: opacity 0.3s ease, transform 0.3s ease, width 0.35s cubic-bezier(0.4,0,0.2,1);
+    .greeting-select { position: relative; display: inline-block; vertical-align: bottom; }
+    .greeting-btn {
+      display: inline-flex; align-items: center; gap: 0.2em;
+      background: rgba(250,246,238,0.12); border: 1px solid rgba(250,246,238,0.22);
+      border-radius: 8px; padding: 0 0.3em;
+      color: inherit; font: inherit; cursor: pointer; line-height: inherit;
+      transition: background 0.2s, border-color 0.2s;
     }
-    #greeting.g-out { opacity: 0; transform: translateY(-14px); }
-    #greeting.g-in  { opacity: 0; transform: translateY(14px); transition: none; }
+    .greeting-btn:hover { background: rgba(250,246,238,0.2); border-color: rgba(250,246,238,0.4); }
+    .greeting-chevron { width: 18px; height: 18px; flex-shrink: 0; transition: transform 0.2s ease; }
+    .greeting-select.open .greeting-chevron { transform: rotate(180deg); }
+    .greeting-dropdown {
+      position: absolute; top: calc(100% + 0.5rem); left: 0; z-index: 200;
+      display: flex; flex-direction: column;
+      background: var(--brown); border: 1px solid rgba(250,246,238,0.1);
+      border-radius: 10px; overflow: hidden; min-width: 210px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+      opacity: 0; transform: translateY(-6px); pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .greeting-select.open .greeting-dropdown { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .g-opt {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.65rem 1rem; cursor: pointer; color: var(--cream);
+      font-family: 'Playfair Display', serif; font-size: var(--text-md); font-weight: 600;
+      border-bottom: 1px solid rgba(250,246,238,0.06); transition: background 0.15s;
+    }
+    .g-opt:last-child { border-bottom: none; }
+    .g-opt:hover { background: rgba(196,98,74,0.25); }
+    .g-opt.active { color: var(--terracotta-light); }
+    .g-lang {
+      font-family: 'Inter', sans-serif; font-size: var(--text-xs);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(250,246,238,0.35); font-weight: 500; margin-left: 1rem;
+    }
     .hero-bio {
       font-size: var(--text-base); font-weight: 300; line-height: 1.85;
       color: rgba(250,246,238,0.82); max-width: 580px; margin-bottom: 2.5rem;
@@ -418,7 +447,7 @@
   <section id="hero">
     <div class="hero-inner">
       <div class="hero-content">
-        <h1 class="hero-name hero-anim ha1"><span id="greeting">Olá</span>, I'm Joana!</h1>
+        <h1 class="hero-name hero-anim ha1"><span class="greeting-select" id="greeting-select"><button class="greeting-btn" id="greeting-btn" aria-haspopup="listbox" aria-expanded="false"><span id="greeting">Olá</span><svg class="greeting-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><span class="greeting-dropdown" id="greeting-dropdown" role="listbox"><span class="g-opt active" role="option" data-word="Olá">Olá<span class="g-lang">Portuguese</span></span><span class="g-opt" role="option" data-word="Hello">Hello<span class="g-lang">English</span></span><span class="g-opt" role="option" data-word="Hola">Hola<span class="g-lang">Spanish</span></span><span class="g-opt" role="option" data-word="Ciao">Ciao<span class="g-lang">Italian</span></span><span class="g-opt" role="option" data-word="Hallo">Hallo<span class="g-lang">German</span></span><span class="g-opt" role="option" data-word="Bonjour">Bonjour<span class="g-lang">French</span></span></span></span>, I'm Joana!</h1>
         <p class="hero-eyebrow hero-anim ha2">Product Professional</p>
         <p class="hero-bio hero-anim ha3">I'm a fusion of Portuguese roots and African rhythms, raised in Portugal's highest mountains, always dreaming of travelling the world. This dream took off in my 20s during my law studies in Genoa, leading to an unexpected decade-long adventure in Düsseldorf. I've made a surprising switch from law to tech, drawn to the fast-paced, innovative tech world that suits my quick and innovative thinking style. Merging law and tech, I've found a unique harmony in these seemingly different paths.</p>
         <div class="hero-ctas hero-anim ha4">
@@ -452,9 +481,9 @@
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item fade-up d2">
-          <span class="stat-number">5</span>
+          <span class="stat-number">6</span>
           <span class="stat-label">Languages</span>
-          <span class="stat-desc">PT · EN · ES · IT · DE</span>
+          <span class="stat-desc">PT · EN · ES · IT · DE · FR</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item fade-up d3">
@@ -910,36 +939,32 @@
       });
     });
 
-    // Greeting cycler
+    // Greeting dropdown
     (function() {
-      const greetings = ['Olá','Hello','Hola','Ciao','Hallo','Bonjour'];
+      const select = document.getElementById('greeting-select');
+      const btn = document.getElementById('greeting-btn');
       const el = document.getElementById('greeting');
 
-      // Persistent probe to measure word widths without layout reflow
-      const probe = document.createElement('span');
-      probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit;pointer-events:none';
-      el.parentNode.appendChild(probe);
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const isOpen = select.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen);
+      });
 
-      // Set explicit initial width so CSS transition has a start value
-      el.style.width = el.offsetWidth + 'px';
+      document.querySelectorAll('.g-opt').forEach(opt => {
+        opt.addEventListener('click', () => {
+          el.textContent = opt.dataset.word;
+          document.querySelectorAll('.g-opt').forEach(o => o.classList.remove('active'));
+          opt.classList.add('active');
+          select.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
 
-      let i = 0;
-      setInterval(() => {
-        el.style.width = el.offsetWidth + 'px'; // lock before fade-out
-        el.classList.add('g-out');
-        setTimeout(() => {
-          i = (i + 1) % greetings.length;
-          probe.textContent = greetings[i];
-          const newW = probe.offsetWidth;
-          el.textContent = greetings[i];
-          el.classList.remove('g-out');
-          el.classList.add('g-in');
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            el.classList.remove('g-in');
-            el.style.width = newW + 'px'; // animate to new width
-          }));
-        }, 300);
-      }, 2500);
+      document.addEventListener('click', () => {
+        select.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
     })();
 
     lucide.createIcons();
