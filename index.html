@@ -182,8 +182,9 @@
       color: var(--brown); line-height: 1.1; margin-bottom: 3rem;
     }
 
-    /* STATS */
-    #stats { background: var(--cream-dark); padding: 4rem; }
+    /* STATS + TESTIMONIALS gradient band */
+    .gradient-band { background: linear-gradient(to bottom, #EDE3D0 0%, #C8A84E 100%); }
+    #stats { background: transparent; padding: 4rem; }
     .stats-bar {
       display: flex; align-items: center; justify-content: center; gap: 0;
     }
@@ -207,7 +208,7 @@
     }
 
     /* TESTIMONIALS */
-    #testimonials { background: var(--terracotta-pale); }
+    #testimonials { background: transparent; }
     .testimonials-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.75rem; }
     .t-card {
       background: var(--cream); padding: 2.25rem 2.5rem;
@@ -470,6 +471,8 @@
     </div>
   </section>
 
+  <!-- STATS + TESTIMONIALS: continuous gradient band -->
+  <div class="gradient-band">
   <!-- STATS -->
   <section id="stats">
     <div class="inner">
@@ -536,6 +539,8 @@
       </div>
     </div>
   </section>
+
+  </div><!-- end .gradient-band -->
 
   <!-- EXPERIENCE -->
   <section id="experience">
