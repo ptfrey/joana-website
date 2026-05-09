@@ -91,6 +91,8 @@
       margin-bottom: 1.25rem;
     }
     .hero-name em { display: block; font-weight: 400; font-size: 0.65em; color: rgba(250,246,238,0.7); }
+    #greeting { display: inline-block; transition: opacity 0.35s ease, transform 0.35s ease; }
+    #greeting.swapping { opacity: 0; transform: translateY(-8px); }
     .hero-bio {
       font-size: var(--text-base); font-weight: 300; line-height: 1.85;
       color: rgba(250,246,238,0.82); max-width: 580px; margin-bottom: 2.5rem;
@@ -412,7 +414,7 @@
   <section id="hero">
     <div class="hero-inner">
       <div class="hero-content">
-        <h1 class="hero-name hero-anim ha1">Olá, I'm Joana!</h1>
+        <h1 class="hero-name hero-anim ha1"><span id="greeting">Olá</span>, I'm Joana!</h1>
         <p class="hero-eyebrow hero-anim ha2">Product Professional</p>
         <p class="hero-bio hero-anim ha3">I'm a fusion of Portuguese roots and African rhythms, raised in Portugal's highest mountains, always dreaming of travelling the world. This dream took off in my 20s during my law studies in Genoa, leading to an unexpected decade-long adventure in Düsseldorf. I've made a surprising switch from law to tech, drawn to the fast-paced, innovative tech world that suits my quick and innovative thinking style. Merging law and tech, I've found a unique harmony in these seemingly different paths.</p>
         <div class="hero-ctas hero-anim ha4">
@@ -904,7 +906,22 @@
       });
     });
 
-lucide.createIcons();
+    // Greeting cycler
+    (function() {
+      const greetings = ['Olá','Hello','Hola','Ciao','Hallo','Bonjour'];
+      const el = document.getElementById('greeting');
+      let i = 0;
+      setInterval(() => {
+        el.classList.add('swapping');
+        setTimeout(() => {
+          i = (i + 1) % greetings.length;
+          el.textContent = greetings[i];
+          el.classList.remove('swapping');
+        }, 350);
+      }, 2500);
+    })();
+
+    lucide.createIcons();
   </script>
 </body>
 </html>
