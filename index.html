@@ -410,10 +410,11 @@
     /* RESPONSIVE */
     @media(max-width:1024px){
       nav{padding:1.5rem 2rem;} section{padding:5rem 2rem;}
-      #hero{padding:8rem 2rem 4rem;}
+      #hero{padding:8rem 2rem 0;}
       .hero-inner{grid-template-columns:1fr;}
       .hero-photo{display:flex; justify-content:center; margin-right:0;}
-      .photo-frame img{height:55vh;}
+      .photo-frame img{height:55vh; display:block;}
+      .scroll-hint{display:none;}
       .bio-grid{grid-template-columns:1fr; gap:2rem;} .bio-meta-col{display:none;}
       .lang-grid{grid-template-columns:repeat(3,1fr);}
       .edu-grid{grid-template-columns:1fr;} .cert-grid{grid-template-columns:1fr;}
