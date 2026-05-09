@@ -91,8 +91,12 @@
       margin-bottom: 1.25rem;
     }
     .hero-name em { display: block; font-weight: 400; font-size: 0.65em; color: rgba(250,246,238,0.7); }
-    #greeting { display: inline-block; transition: opacity 0.35s ease, transform 0.35s ease; }
-    #greeting.swapping { opacity: 0; transform: translateY(-8px); }
+    #greeting {
+      display: inline-block; overflow: hidden; vertical-align: bottom;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    #greeting.g-out { opacity: 0; transform: translateY(-14px); }
+    #greeting.g-in  { opacity: 0; transform: translateY(14px); transition: none; }
     .hero-bio {
       font-size: var(--text-base); font-weight: 300; line-height: 1.85;
       color: rgba(250,246,238,0.82); max-width: 580px; margin-bottom: 2.5rem;
@@ -910,14 +914,26 @@
     (function() {
       const greetings = ['Olá','Hello','Hola','Ciao','Hallo','Bonjour'];
       const el = document.getElementById('greeting');
+
+      // Lock min-width to longest word so layout never reflows
+      const probe = document.createElement('span');
+      probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit';
+      el.parentNode.appendChild(probe);
+      let maxW = 0;
+      greetings.forEach(g => { probe.textContent = g; maxW = Math.max(maxW, probe.offsetWidth); });
+      probe.remove();
+      el.style.minWidth = maxW + 'px';
+
       let i = 0;
       setInterval(() => {
-        el.classList.add('swapping');
+        el.classList.add('g-out');
         setTimeout(() => {
           i = (i + 1) % greetings.length;
           el.textContent = greetings[i];
-          el.classList.remove('swapping');
-        }, 350);
+          el.classList.remove('g-out');
+          el.classList.add('g-in');
+          requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('g-in')));
+        }, 300);
       }, 2500);
     })();
 
