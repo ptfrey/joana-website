@@ -294,6 +294,40 @@
     .cert-org { font-size: var(--text-sm); color: var(--terracotta); font-weight: 500; margin-bottom: 0.5rem; }
     .cert-desc { font-size: var(--text-sm); color: var(--brown-light); line-height: 1.55; font-weight: 300; }
 
+    /* INTERESTS */
+    #interests { background: var(--brown); }
+    #interests .section-eyebrow { color: var(--terracotta-light); }
+    #interests .section-eyebrow::after { background: var(--terracotta-light); }
+    #interests .section-title { color: var(--cream); }
+    .interests-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; }
+    .interest-card {
+      position: relative; overflow: hidden; aspect-ratio: 3/4; cursor: default;
+    }
+    .interest-card img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+      display: block;
+    }
+    .interest-card:hover img { transform: scale(1.06); }
+    .interest-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(42,26,18,0.85) 0%, rgba(42,26,18,0.2) 55%, transparent 100%);
+      transition: background 0.4s;
+    }
+    .interest-card:hover .interest-overlay {
+      background: linear-gradient(to top, rgba(42,26,18,0.92) 0%, rgba(42,26,18,0.35) 55%, transparent 100%);
+    }
+    .interest-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.75rem 1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: var(--text-md); font-weight: 600;
+      color: var(--cream); letter-spacing: 0.02em;
+    }
+    @media (max-width: 768px) {
+      .interests-grid { grid-template-columns: repeat(2,1fr); }
+    }
+
     /* VOLUNTEERING */
     #volunteering { background: var(--cream-dark); }
     .vol-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
@@ -778,6 +812,36 @@
           <p class="vol-org">Luciano Garcia School</p>
           <p class="vol-meta">Digital Safety Educator · Oct–Nov 2017 · Cape Verde</p>
           <p class="vol-desc">Empowered children with digital literacy — internet safety, awareness of online dangers, and responsible digital behavior.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERESTS -->
+  <section id="interests">
+    <div class="inner">
+      <span class="section-eyebrow fade-up">Beyond Work</span>
+      <h2 class="section-title fade-up d1">Passions &amp; Interests</h2>
+      <div class="interests-grid">
+        <div class="interest-card fade-up d1">
+          <img src="images/Interests/Nature.jpg" alt="Nature">
+          <div class="interest-overlay"></div>
+          <p class="interest-label">Nature</p>
+        </div>
+        <div class="interest-card fade-up d2">
+          <img src="images/Interests/music.jpg" alt="Music and Concerts">
+          <div class="interest-overlay"></div>
+          <p class="interest-label">Music &amp; Concerts</p>
+        </div>
+        <div class="interest-card fade-up d3">
+          <img src="images/Interests/arts.jpg" alt="Arts, Crafts & Upcycling">
+          <div class="interest-overlay"></div>
+          <p class="interest-label">Arts, Crafts &amp; Upcycling</p>
+        </div>
+        <div class="interest-card fade-up d4">
+          <img src="images/Interests/History.jpg" alt="History">
+          <div class="interest-overlay"></div>
+          <p class="interest-label">History</p>
         </div>
       </div>
     </div>
