@@ -99,13 +99,8 @@
 
     /* PHOTO */
     .hero-photo { flex-shrink: 0; display: flex; align-items: flex-end; margin-right: -3rem; }
-    .photo-frame { display: flex; align-items: flex-end; position: relative; }
-    .photo-frame img { height: 82vh; width: auto; display: block; position: relative; z-index: 1; }
-    .globe-wrap {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none; z-index: 0;
-    }
+    .photo-frame { display: flex; align-items: flex-end; }
+    .photo-frame img { height: 82vh; width: auto; display: block; }
 
     /* SCROLL INDICATOR */
     .scroll-hint {
@@ -430,8 +425,7 @@
       </div>
       <div class="hero-photo hero-anim ha6">
         <div class="photo-frame">
-          <div class="globe-wrap"><canvas id="globe-canvas"></canvas></div>
-          <img src="images/JoanaMask.png" alt="Joana Milene Garcia">
+<img src="images/JoanaMask.png" alt="Joana Milene Garcia">
         </div>
       </div>
     </div>
@@ -902,77 +896,7 @@
       });
     });
 
-    // Spinning globe
-    (function() {
-      const canvas = document.getElementById('globe-canvas');
-      const ctx = canvas.getContext('2d');
-      const SIZE = 520;
-      canvas.width = SIZE; canvas.height = SIZE;
-      const R = SIZE * 0.43;
-      const cx = SIZE / 2, cy = SIZE / 2;
-      const TILT = 22 * Math.PI / 180;
-      let rot = 0;
-
-      function project(lat, lon) {
-        const x0 = Math.cos(lat) * Math.sin(lon + rot);
-        const y0 = Math.sin(lat);
-        const z0 = Math.cos(lat) * Math.cos(lon + rot);
-        const y1 = y0 * Math.cos(TILT) - z0 * Math.sin(TILT);
-        const z1 = y0 * Math.sin(TILT) + z0 * Math.cos(TILT);
-        return { x: cx + x0 * R, y: cy - y1 * R, z: z1 };
-      }
-
-      function drawLine(pts, alpha) {
-        ctx.beginPath();
-        ctx.strokeStyle = `rgba(250,246,238,${alpha})`;
-        ctx.lineWidth = 0.9;
-        pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-        ctx.stroke();
-      }
-
-      function draw() {
-        ctx.clearRect(0, 0, SIZE, SIZE);
-
-        // Latitude lines
-        for (let ld = -75; ld <= 75; ld += 15) {
-          const lat = ld * Math.PI / 180;
-          const pts = [];
-          for (let lo = 0; lo <= 360; lo += 3) pts.push(project(lat, lo * Math.PI / 180));
-          drawLine(pts, 0.14);
-        }
-
-        // Longitude lines
-        for (let ld = 0; ld < 360; ld += 20) {
-          const lon = ld * Math.PI / 180;
-          const pts = [];
-          for (let la = -90; la <= 90; la += 3) pts.push(project(la * Math.PI / 180, lon));
-          drawLine(pts, 0.14);
-        }
-
-        // Outer circle
-        ctx.beginPath();
-        ctx.arc(cx, cy, R, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(250,246,238,0.22)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-
-        // Radial glow
-        const g = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * 1.2);
-        g.addColorStop(0, 'rgba(250,246,238,0)');
-        g.addColorStop(0.7, 'rgba(250,246,238,0.03)');
-        g.addColorStop(1, 'rgba(250,246,238,0)');
-        ctx.beginPath();
-        ctx.arc(cx, cy, R * 1.2, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
-
-        rot += 0.004;
-        requestAnimationFrame(draw);
-      }
-      draw();
-    })();
-
-    lucide.createIcons();
+lucide.createIcons();
   </script>
 </body>
 </html>
