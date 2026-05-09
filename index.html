@@ -92,8 +92,8 @@
     }
     .hero-name em { display: block; font-weight: 400; font-size: 0.65em; color: rgba(250,246,238,0.7); }
     #greeting {
-      display: inline-block; overflow: hidden; vertical-align: bottom;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      display: inline-block; overflow: hidden; vertical-align: bottom; white-space: nowrap;
+      transition: opacity 0.3s ease, transform 0.3s ease, width 0.35s cubic-bezier(0.4,0,0.2,1);
     }
     #greeting.g-out { opacity: 0; transform: translateY(-14px); }
     #greeting.g-in  { opacity: 0; transform: translateY(14px); transition: none; }
@@ -915,24 +915,29 @@
       const greetings = ['Olá','Hello','Hola','Ciao','Hallo','Bonjour'];
       const el = document.getElementById('greeting');
 
-      // Lock min-width to longest word so layout never reflows
+      // Persistent probe to measure word widths without layout reflow
       const probe = document.createElement('span');
-      probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit';
+      probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit;pointer-events:none';
       el.parentNode.appendChild(probe);
-      let maxW = 0;
-      greetings.forEach(g => { probe.textContent = g; maxW = Math.max(maxW, probe.offsetWidth); });
-      probe.remove();
-      el.style.minWidth = maxW + 'px';
+
+      // Set explicit initial width so CSS transition has a start value
+      el.style.width = el.offsetWidth + 'px';
 
       let i = 0;
       setInterval(() => {
+        el.style.width = el.offsetWidth + 'px'; // lock before fade-out
         el.classList.add('g-out');
         setTimeout(() => {
           i = (i + 1) % greetings.length;
+          probe.textContent = greetings[i];
+          const newW = probe.offsetWidth;
           el.textContent = greetings[i];
           el.classList.remove('g-out');
           el.classList.add('g-in');
-          requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('g-in')));
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            el.classList.remove('g-in');
+            el.style.width = newW + 'px'; // animate to new width
+          }));
         }, 300);
       }, 2500);
     })();
